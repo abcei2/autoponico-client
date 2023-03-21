@@ -43,15 +43,14 @@ void JanusClient::janusRequests( const char *type)
 
   JSONVar data, response;
   char janusHttpPortStr[10];
-  itoa(janusHttpPort, janusHttpPortStr, 10);
+  itoa(this->janusHttpPort, janusHttpPortStr, 10);
 
-  int hostUrlLen = strlen(this->janusHost);
   char hostUrlBuf[100 /*Path*/ + 10 /*protocol ej; http://*/];
   strcpy(hostUrlBuf, "http://");
-  strcat(hostUrlBuf, janusHost);
+  strcat(hostUrlBuf, this->janusHost);
   strcat(hostUrlBuf, ":");
   strcat(hostUrlBuf, janusHttpPortStr);
-
+  strcat(hostUrlBuf, "/janus");
 
   data["janus"] = type;
   if (type == "create")
@@ -63,7 +62,6 @@ void JanusClient::janusRequests( const char *type)
     data["plugin"] = "janus.plugin.textroom";
   }
   data["transaction"] = this->newUUID();
-
   // configure traged server and url
   http.begin(client, hostUrlBuf); // HTTP
   http.addHeader("Content-Type", "application/json");
